@@ -1,0 +1,234 @@
+/*!
+ * Start Bootstrap - Simple Sidebar (https://startbootstrap.com/templates/simple-sidebar)
+ * Copyright 2013-2020 Start Bootstrap
+ * Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-simple-sidebar/blob/master/LICENSE)
+ */
+
+ #wrapper {
+    overflow-x: hidden;
+  
+ }
+
+#sidebar-wrapper {
+  min-height: 100vh;
+  margin-left: -15rem;
+  -webkit-transition: margin .25s ease-out;
+  -moz-transition: margin .25s ease-out;
+  -o-transition: margin .25s ease-out;
+  transition: margin .25s ease-out;
+  
+}
+
+#sidebar-wrapper .sidebar-heading {
+  padding: 20%;
+  font-size: 1.2rem;
+  background-color:#4f4b4b;
+}
+
+#sidebar-wrapper .list-group {
+  width: 15rem;
+  
+}
+
+#page-content-wrapper {
+  min-width: 100vw;
+  margin-left: -0.7px;
+
+  
+}
+
+#wrapper.toggled #sidebar-wrapper {
+  margin-left: 0;
+  
+}
+
+@media (min-width: 768px) {
+  #sidebar-wrapper {
+    margin-left: 0;
+  
+  }
+
+  #page-content-wrapper {
+    min-width: 0;
+    width: 100%;
+    
+  }
+
+  #wrapper.toggled #sidebar-wrapper {
+    margin-left: -15rem;
+    
+  }
+}
+
+#menu-toggle{
+
+  background-color: rgb(255, 121, 0);
+  border-color: rgb(255, 121, 0);
+  position: inherit;
+  margin-left: auto;
+  box-shadow: rgb(255, 121, 0)
+}
+
+
+.bg-light {
+  border-color:#dee2e6 ;
+  color: rgb(255, 121, 0);
+  font-size: 2rem;
+}
+
+.list-group-item{
+  padding: 10% 10% 10% 5%;
+}
+
+.form-group {
+  margin : 2% 5% 2% 5%;
+}
+
+.col{
+  margin: 0.5% 0 0.5% 0;
+}
+
+th {
+  background-color:  rgba(255, 121, 0, 0.842);
+}
+
+tr[scope="impair"] {
+  background-color:   rgb(168, 133, 216);
+}
+tr[scope="pair"] {
+  background-color:  rgb(75, 181, 230);
+}
+td[scope="rimpair"] {
+  background-color:  rgb(220, 206, 239);
+}
+td[scope="rpair"] {
+  background-color:  rgb(182, 225, 245);
+}
+
+.info-texte{
+  margin-top: 2%;
+  margin-bottom: 2%;
+  text-align: center;
+  font-size: 30px;
+
+}
+
+.info-texteO{
+  margin-top: 2%;
+  margin-bottom: 2%;
+  text-align: center;
+  font-size: 30px;
+  color:rgb(255, 121, 0);
+
+}
+
+.sidebar-heading{
+  font-size: 50px;
+  text-align: center;
+}
+
+.table{
+  margin-left: 2%;
+  width: 96%;
+}
+
+.Orange{
+  color:rgb(255, 121, 0); 
+}
+
+.btn-success {
+  background-color: #50BE87 ;
+  border-color: #50BE87;
+  width: 100%;
+}
+
+#alert_danger_global {
+
+  margin-left: 2%;
+  margin-right: 2%;
+  text-align: center;
+}
+
+.form-control:hover{
+
+  color: grey;
+
+}
+
+.result_div{
+  text-align: center;
+  color: rgb(255, 121, 0) ;
+}
+
+#DATAT{
+  position: relative;
+  width: 100% ;
+  height: 75% ;
+}
+
+#excel{
+  margin-left: 10%;
+  margin-right: 10%;
+  width : 50%;
+
+}
+
+#recherche{
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+#tag_erreur{
+  display: none;
+  text-align: center;
+  
+}
+
+#tag_Success{
+  display: none;
+  text-align: center;
+  
+}
+
+.col-6{
+  background-color:#4f4b4b;
+  color: white;
+}
+
+.row{
+  margin-left: 2%;
+  margin-right: 2%;
+  padding-top: 4px;
+  padding-bottom: 8px; 
+  
+}
+
+.number{
+  color:#50BE87;
+  font-size: 50px;
+  
+}
+
+.col-md-6{
+  background-color:#4f4b4b;
+  color: white;
+  text-align: right;
+  padding-top: 4px;
+  padding-bottom: 8px; 
+}
+
+.AUG{
+  color:#50BE87;
+  font-size: 30px;
+  
+}
+
+.Date{
+color:rgb(255, 121, 0);
+font-size: 40px;
+
+}
+
+.input-group mb-3{
+  display: none;
+}
