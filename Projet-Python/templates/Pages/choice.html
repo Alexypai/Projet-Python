@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionnaire Orange</title>
+</head>
+<body>
+    <h1>Choisisez la categorie metier souhaitez dans le projet ainsi que son temps de travail néssesaire</h1>
+    <form action="http://127.0.0.1:5000/choice" method="post">
+        <select name="ROLES" id="ROLES">
+            <option value="RH" name="ROLES">RH</option>
+            <option value="MANAGER" name="ROLES">MANAGER</option>
+            <option value="DEVELOPER" name="ROLES">DEVELOPER</option>
+        </select>
+        <input type="number" id="TIME" name="TIME">
+        <button type="submit">Ajouter</button>
+    </form>
+    <button><a href="/">Fin Création Equipe</a></button>
+</body>
+{% include 'Common_scripts/footer.html' %}
