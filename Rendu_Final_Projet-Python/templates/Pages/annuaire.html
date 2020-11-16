@@ -1,0 +1,25 @@
+<body>
+    <form action="http://127.0.0.1:5000/Annuaire" method="POST">
+        <table class="table table-striped table-sm">
+            <thead>
+                <tr>
+                    <th>Matricule</th>
+                    <th>Nom</th>
+                    <th>Anniversaire</th>
+                    <th>Adresse mail</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for U in donneesEmploye %}
+                <tr>
+                    <td>{{ U[0] }}</td>
+                    <td>{{ U[1] }}</td>
+                    <td>{{ U[2] }}</td>
+                    <td>{{ U[3] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </form>
+</body>
+{% include 'Common_scripts/footer.html' %}
