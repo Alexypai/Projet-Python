@@ -100,7 +100,7 @@ def Employe():
 def query_employe():
     connect = sqlite3.connect(db_local)
     c = connect.cursor()
-    c.execute ("SELECT matricule, nom, prenom, sexe FROM USERS")
+    c.execute("SELECT users_id, users_name, 'x', 'x' FROM USERS")
     donneesEmploye = c.fetchall()
     connect.close()
     return donneesEmploye
