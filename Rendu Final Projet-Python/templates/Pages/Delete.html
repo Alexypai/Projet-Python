@@ -1,7 +1,7 @@
 {% include 'Common_scripts/nav.html' %}
 <h1>Veuillez renseigné l'ID de l'equipe a Supprimé</h1>
  
-<form action="http://127.0.0.1:5000/Delete" method="post">
+<form action="{{ url_for('Delete') }}" method="post">
     <input type="number" id="id" name="id">
     <button type="submit">Supprimé</button>
 </form>
