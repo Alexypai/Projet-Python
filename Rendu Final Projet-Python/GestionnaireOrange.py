@@ -1,27 +1,38 @@
 import os
 import sqlite3
 
-from flask import Flask, redirect, render_template, request, session, url_for
+from flask import (
+    Flask, g, redirect, render_template, request, session, url_for)
 
-
-# Application database filename
-db_local = 'BDD_python_project.db'
 
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
+
+
+def get_cursor():
+    if 'db' not in g:
+        g.db = sqlite3.connect('BDD_python_project.db')
+    return g.db.cursor()
+
+
+def close_db(e=None):
+    db = g.pop('db', None)
+    if db is not None:
+        db.close()
+
+
+app.teardown_appcontext(close_db)
 
 
 @app.route('/', methods=['GET', 'POST'])
 def log():
     """Login page."""
     if request.method == 'POST':
-        connect = sqlite3.connect(db_local)
-        c = connect.cursor()
-        c.execute(
+        cursor = get_cursor()
+        cursor.execute(
             "SELECT login, password FROM logs WHERE login=? AND password=?",
             (request.form['Login'], request.form['Password']))
-        users = c.fetchall()
-        connect.close()
+        users = cursor.fetchall()
 
         if users:
             session['logged_in'] = True
@@ -37,13 +48,11 @@ def log():
 def create():
     """Create a new user."""
     if request.method == 'POST':
-        connect = sqlite3.connect(db_local)
-        c = connect.cursor()
-        c.execute(
+        cursor = get_cursor()
+        cursor.execute(
             "INSERT INTO logs (login, password) VALUES (?,?)",
             (request.form['newLogin'], request.form['newPassword']))
-        connect.commit()
-        connect.close()
+        cursor.connection.commit()
         return render_template('Pages/login.html', msgb="Utilisateur créé !")
 
     return render_template('Pages/nouvelUtilisateur.html')
@@ -63,11 +72,9 @@ def index():
 
 @app.route('/Annuaire')
 def Employe():
-    connect = sqlite3.connect(db_local)
-    c = connect.cursor()
-    c.execute("SELECT users_id, users_name, 'x', 'x' FROM USERS")
-    donneesEmploye = c.fetchall()
-    connect.close()
+    cursor = get_cursor()
+    cursor.execute("SELECT users_id, users_name, 'x', 'x' FROM USERS")
+    donneesEmploye = cursor.fetchall()
     return render_template(
         'Pages/annuaire.html', donneesEmploye=donneesEmploye)
 
@@ -76,14 +83,12 @@ def Employe():
 def Crea():
     """Team creation page where the user must enter the project name."""
     if request.method == 'POST':
-        connect = sqlite3.connect(db_local)
-        c = connect.cursor()
-        c.execute(
+        cursor = get_cursor()
+        cursor.execute(
             'INSERT INTO PROJECTS (PROJECTS_name) VALUES (?)',
             (request.form['team_name'],))
-        connect.commit()
-        id_Project = c.lastrowid
-        connect.close()
+        cursor.connection.commit()
+        id_Project = cursor.lastrowid
         return redirect(url_for('choice', id_Project=id_Project))
 
     return render_template('Pages/Création_equipe.html')
@@ -100,9 +105,8 @@ def choice(id_Project):
 
     """
     if request.method == 'POST':
-        connect = sqlite3.connect(db_local)
-        c = connect.cursor()
-        c.execute(
+        cursor = get_cursor()
+        cursor.execute(
             "SELECT USERS_BY_PROJECT.USERS_ID FROM ("
             "RESPONSIBILITIES INNER JOIN ("
             "USERS INNER JOIN ("
@@ -122,15 +126,15 @@ def choice(id_Project):
             "HAVING (((RESPONSIBILITIES.Responsibilities_Name)=?)) "
             "ORDER BY [USERS].[TAUX_HORAIRE]-SU.SBU DESC;",
             (request.form['ROLES'],))
-        x = c.fetchall()
+        x = cursor.fetchall()
         x2 = x[0]
         user_select = x2[0]
-        c2 = connect.cursor()
-        c2.execute(
+
+        cursor.execute(
             "INSERT INTO USERS_BY_PROJECT (TIME,USERS_ID,PROJECTS_ID) "
             "VALUES (?,?,?)", (request.form['TIME'], user_select, id_Project))
-        connect.commit()
-        connect.close()
+        cursor.connection.commit()
+
         return render_template(
             'Pages/choice.html', id_Project=id_Project, msgv=(
                 "Employé Ajouté ! Vous pouvez continuer ou valide votre "
@@ -142,10 +146,8 @@ def choice(id_Project):
 @app.route('/Equipe')
 def Equipe():
     """Current projects and users linked to the different projects."""
-    connect = sqlite3.connect(db_local)
-
-    c = connect.cursor()
-    c.execute(
+    cursor = get_cursor()
+    cursor.execute(
         "SELECT USERS_BY_PROJECT.USERS_ID,USERS.USERS_NAME,"
         "USERS_BY_PROJECT.PROJECTS_ID,PROJECTS.PROJECTS_name,"
         "USERS_BY_PROJECT.TIME FROM PROJECTS "
@@ -154,12 +156,10 @@ def Equipe():
         "JOIN USERS_BY_PROJECT ON USERS.USERS_ID = USERS_BY_PROJECT.USERS_ID) "
         "ON PROJECTS.PROJECTS_ID = USERS_BY_PROJECT.PROJECTS_ID "
         "LIMIT 200 OFFSET 14")
-    users = c.fetchall()
+    users = cursor.fetchall()
 
-    c.execute("SELECT * FROM PROJECTS WHERE PROJECTS_ID > 1")
-    equipe = c.fetchall()
-
-    connect.close()
+    cursor.execute("SELECT * FROM PROJECTS WHERE PROJECTS_ID > 1")
+    equipe = cursor.fetchall()
 
     return render_template(
         'Pages/Equipe_cree.html', Equipe=equipe, Users=users)
@@ -172,16 +172,14 @@ def Delete():
         if request.form['id'] == '1':
             return render_template(
                 'Pages/Delete.html', msg="Impossible de suprrimé cette valeur")
-        connect = sqlite3.connect(db_local)
-        c = connect.cursor()
-        c.execute(
+        cursor = get_cursor()
+        cursor.execute(
             "DELETE FROM PROJECTS WHERE PROJECTS_ID = ?",
             (request.form['id'],))
-        c.execute(
+        cursor.execute(
             "DELETE FROM USERS_BY_PROJECT WHERE PROJECTS_ID = ?",
             (request.form['id'],))
-        connect.commit()
-        connect.close()
+        cursor.connection.commit()
         return render_template('Pages/Delete.html', msg=(
             "Equipe supprimé ! Vous pouvez continuer ou utilisé le menu "
             "ci dessus pour d'autres fonctionnalités"))
