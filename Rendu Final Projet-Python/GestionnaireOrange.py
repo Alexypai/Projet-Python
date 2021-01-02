@@ -14,31 +14,23 @@ app.secret_key = os.urandom(12)
 @app.route('/', methods=['GET', 'POST'])
 def log():
     """Login page."""
-    session['logged_in'] = True
     if request.method == 'POST':
-        if connexion(request.form['Login'], request.form['Password']):
+        connect = sqlite3.connect(db_local)
+        c = connect.cursor()
+        c.execute(
+            "SELECT login, password FROM logs WHERE login=? AND password=?",
+            (request.form['Login'], request.form['Password']))
+        users = c.fetchall()
+        connect.close()
+
+        if users:
+            session['logged_in'] = True
             return render_template("Pages/Index.html")
         else:
             return render_template(
                 'Pages/login.html', msgn="Mauvais User name ou Password !")
 
     return render_template('Pages/login.html')
-
-
-def connexion(log_user, password_user):
-    connect = sqlite3.connect(db_local)
-    c = connect.cursor()
-    c.execute(
-        "SELECT login, password FROM logs WHERE login=? AND password=?",
-        (log_user, password_user))
-    users = c.fetchall()
-
-    if not users:
-        return False
-
-    user = users[0]
-    connect.close()
-    return password_user == user[1] and log_user == user[0]
 
 
 @app.route('/createUser', methods=['GET', 'POST'])
@@ -53,6 +45,7 @@ def create():
         connect.commit()
         connect.close()
         return render_template('Pages/login.html', msgb="Utilisateur créé !")
+
     return render_template('Pages/nouvelUtilisateur.html')
 
 
@@ -142,6 +135,7 @@ def choice(id_Project):
             'Pages/choice.html', id_Project=id_Project, msgv=(
                 "Employé Ajouté ! Vous pouvez continuer ou valide votre "
                 "equipe en cliquant sur fin création d'equipe"))
+
     return render_template('Pages/choice.html', id_Project=id_Project)
 
 
@@ -191,4 +185,5 @@ def Delete():
         return render_template('Pages/Delete.html', msg=(
             "Equipe supprimé ! Vous pouvez continuer ou utilisé le menu "
             "ci dessus pour d'autres fonctionnalités"))
+
     return render_template('Pages/Delete.html')
